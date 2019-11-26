@@ -11,17 +11,53 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    User
-        User
+   User
     .findById(req.params.id)
     .then(user => {
       if (user) {
         res.status(200).json(user)
+       }else {
+         res.status(404).send('error user not found')
+       }
+    })
+})
+
+router.post('/', (req, res) => {
+    const newUser = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+      })
+      newUser.save((err, user) => {
+        if (user) {
+          res.status(201).send(user);
+        } else handleError(err);
+      });
+});
+
+router.put('/:id', (req, res) => {
+  User
+    .findByIdAndUpdate(req.params.id,
+      {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+      })
+    .then(users => {
+      res.status(204).json(users);
+    });
+})
+
+router.delete('/:id', (req, res) => {
+  User
+    .findByIdAndRemove(req.params.id)
+    .then(users => {
+      if (users) {
+        res.status(200).json(users);
+      } else{
+        res.status(500)
       }
     })
-    .catch(err => {
-      res.status(404).send('This user was not found.')
-    });
 })
 
 module.exports = router;
